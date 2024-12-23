@@ -66,13 +66,21 @@ preds = model.predict(X_pad)
 predicts = []
 for pred in preds:
     most = label[np.argmax(pred)]
-    predicts.append(most)
+    pred[np.argmax(pred)] = 0
+    second = label[np.argmax(pred)]
+    predicts.append([most, second])
 df['predict'] = predicts
 
 print(df.head(30))
 
+score = model.evaluate(X_pad, onehot_Y)
+print(score[1])
 
-
+df['OX'] = 0
+for i in range(len(df)):
+    if df.loc[i, 'category'] in df.loc[i, 'predict']:
+        df.loc[i, 'OX'] = 1
+print(df.OX.mean())
 
 
 
